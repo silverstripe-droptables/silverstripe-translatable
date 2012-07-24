@@ -25,3 +25,21 @@ ul.tree span.untranslated a:visited {
 .cms-content-toolbar {
 	margin-bottom: 7px;
 }
+
+/* Fix to form styling to group the originallang_holder fields together nicely. */
+.originallang_holder .field,
+.ss-toggle .ui-accordion-content .originallang_holder:last-child .field:last-child {
+	border-bottom: none; box-shadow: none;
+}
+.originallang_holder .field:last-child {
+	border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(244, 245, 245, 0.8); -moz-box-shadow: 0 1px 0 rgba(244, 245, 245, 0.8); box-shadow: 0 1px 0 rgba(244, 245, 245, 0.8);
+}
+.ss-toggle .ui-accordion-content .originallang_holder .field.originallang {
+	margin-bottom: 8px;
+}
+
+/* Styles for the sitetree's language dropdown. */
+div.languagedropdown label.left {
+	float: left;
+	padding: 8px 8px 8px 0;
+}

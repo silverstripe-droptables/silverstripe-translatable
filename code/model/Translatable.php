@@ -1568,7 +1568,8 @@ class Translatable extends DataExtension implements PermissionProvider {
 	 * @return bool
      */
 	public function augmentValidURLSegment() {
-		if(self::locale_filter_enabled()) {
+		$reEnableFilter = false;
+		if (self::locale_filter_enabled()) {
 			self::disable_locale_filter();
 			$reEnableFilter = true;
 		}
