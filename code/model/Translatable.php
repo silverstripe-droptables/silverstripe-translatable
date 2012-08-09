@@ -543,8 +543,10 @@ class Translatable extends DataExtension implements PermissionProvider {
 	function augmentSQL(SQLQuery &$query) {
 		// If the record is saved (and not a singleton), and has a locale,
 		// limit the current call to its locale. This fixes a lot of problems
-		// with other extensions like Versioned
-		$locale = ($this->owner->ID && !empty($this->owner->Locale)) ? $this->owner->Locale : Translatable::get_current_locale();
+		// with other extensions like Versioned.
+		// We can't rely on Locale being set as it may be in the process of
+		// being lazy-loaded.
+		$locale = ($this->owner->ID && !isset($this->owner->Locale_Lazy) && $this->owner->Locale) ? $this->owner->Locale : Translatable::get_current_locale();
 		$baseTable = ClassInfo::baseDataClass($this->owner->class);
 		if(
 			$locale
