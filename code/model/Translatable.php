@@ -907,24 +907,30 @@ class Translatable extends DataExtension implements PermissionProvider {
 		// and a translation. Include the current locale (record might not be saved yet).
 		$alreadyTranslatedLocales = $this->getTranslatedLocales();
 		$alreadyTranslatedLocales[$this->owner->Locale] = $this->owner->Locale;
-		$alreadyTranslatedLocales = array_combine($alreadyTranslatedLocales, $alreadyTranslatedLocales);
+		$alreadyTranslatedLocales = array_combine($alreadyTranslatedLocales, $alreadyTranslatedLocales);		
 		
-		$fields->addFieldsToTab(
-			'Root',
-			new Tab('Translations', _t('Translatable.TRANSLATIONS', 'Translations'),
-				new HeaderField('CreateTransHeader', _t('Translatable.CREATE', 'Create new translation'), 2),
-				$langDropdown = new LanguageDropdownField(
-					"NewTransLang", 
-					_t('Translatable.NEWLANGUAGE', 'New language'), 
-					$alreadyTranslatedLocales,
-					'SiteTree',
-					'Locale-English',
-					$this->owner
-				),
-				$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
-			)
+		$fields->addFieldsToTab('Root', new Tab('Translations', _t('Translatable.TRANSLATIONS', 'Translations')));
+
+		$langDropdown = new LanguageDropdownField(
+			"NewTransLang", 
+			_t('Translatable.NEWLANGUAGE', 'New language'), 
+			$alreadyTranslatedLocales,
+			'SiteTree',
+			'Locale-English',
+			$this->owner
 		);
-		$createButton->includeDefaultJS(false);
+
+		if ($langDropdown->getSource())
+		{
+			$fields->addFieldsToTab('Root.Translations', array(
+				new HeaderField('CreateTransHeader', _t('Translatable.CREATE', 'Create new translation'), 2),
+				$langDropdown,
+				$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
+			));
+			$langDropdown->addExtraClass('languageDropdown no-change-track');
+			$createButton->addExtraClass('createTranslationButton');
+			$createButton->includeDefaultJS(false);
+		}
 
 		if($alreadyTranslatedLocales) {
 			$fields->addFieldToTab(
@@ -947,9 +953,6 @@ class Translatable extends DataExtension implements PermissionProvider {
 				new LiteralField('existingtrans',$existingTransHTML)
 			);
 		}
-	
-		$langDropdown->addExtraClass('languageDropdown no-change-track');
-		$createButton->addExtraClass('createTranslationButton');
 	}
 	
 	function updateSettingsFields(&$fields) {
