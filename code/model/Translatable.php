@@ -1193,10 +1193,10 @@ class Translatable extends DataExtension implements PermissionProvider {
 	 */
 	protected function populateSiteConfigDefaults() {
 		
-		// Work-around for population of defaults during database initialisation.
-		// When the database is being setup singleton('SiteConfig') is called.
-		if(!DB::getConn()->hasTable($this->owner->class)) return;
-		if(!DB::getConn()->hasField($this->owner->class, 'Locale')) return;
+		// When the database is being setup singleton('SiteConfig') is called,
+		// but the SiteConfig table might not be ready yet and the queries will break.
+		// Skip the population of defaults in this case.
+		if(DB::getConn()->isSchemaUpdating()) return;
 		
 		// Find the best base translation for SiteConfig
 		Translatable::disable_locale_filter();
